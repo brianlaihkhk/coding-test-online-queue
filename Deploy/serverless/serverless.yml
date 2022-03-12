@@ -1,0 +1,122 @@
+service: order
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  env: ${file(../resources/env-${opt:stage, 'dev'}.yml)}
+  pythonRequirements:
+    dockerizePip: non-linux
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+#  scriptHooks:
+#    after:package:cleanup:
+#      - pip3 install -I -t build/ -r package.txt
+
+#* Create an optimized package for our functions
+package: 
+  individually: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: prd
+  region: ap-southeast-1
+
+plugins:
+  - serverless-python-requirements
+  - serverless-scriptable-plugin
+  - serverless-prune-plugin
+
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "rds:*"
+    Resource: "*"
+
+functions:
+  ping:
+    name: order-ping-${opt:stage}
+    handler: Order/ping.ping
+    package: {}
+    events:
+    -
+      http:
+        path: ping
+        method: GET
+        cors: true
+        private: true
+
+  purchase:
+    name: order-purchase-${opt:stage}
+    handler: Order/purchase.purchase
+    timeout: 30
+    package: {}
+    events:
+    -
+      http:
+        path: purchase
+        method: POST
+        cors: true
+        private: true
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_ORDER_USERNAME: ${self:custom.env.RDS_ORDER_USERNAME}
+      RDS_ORDER_PASSWORD: ${self:custom.env.RDS_ORDER_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
+
+  queue:
+    name: order-queue-${opt:stage}
+    handler: Order/queue.status
+    timeout: 30
+    package: {}
+    -
+      http:
+        path: status
+        method: GET
+        cors: true
+        private: true
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
+
+  session:
+    name: order-session-${opt:stage}
+    handler: Order/session.new
+    timeout: 30
+    package: {}
+    events:
+      - 
+      http:
+        path: session
+        method: GET
+        cors: true
+        private: true      
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
