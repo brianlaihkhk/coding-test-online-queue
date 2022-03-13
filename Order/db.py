@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from cryptography.fernet import Fernet

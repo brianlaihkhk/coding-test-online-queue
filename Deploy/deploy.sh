@@ -4,9 +4,7 @@ mkdir build/
 chmod 777 build/
 
 cp -rf serverless/ build/
-
-mkdir build/Order/
-cp -rf ../Order/ build/Order/
+cp -rf ../Order/ build/
 
 pip3 install -I -t build/ -r ../requirement.txt
 
@@ -58,4 +56,4 @@ case "$2" in
         ;;
   esac
 
-rm -rf build/
+# rm -rf build/
