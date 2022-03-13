@@ -13,13 +13,14 @@ def purchase(event, context):
         return response.failure("Unable to retrieve Authorization message")
 
     user_session = get(event['Session'])
+    user_authorization = str(event['Authorization']).lstrip("Bearer").strip()
     user_uuid = str(uuid.uuid4())
 
     if not is_valid(user_session):
         return response.failure("Session is expired or waiting")
 
     try:
-        payload = jwt.decode(event['Authorization'], user_session.JWT_TOKEN, algorithms=["HS256"])
+        payload = jwt.decode(user_authorization, user_session.JWT_TOKEN, algorithms=["HS256"])
     except:
         return response.failure("Unable to decrypt message")
 

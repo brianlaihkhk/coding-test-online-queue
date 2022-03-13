@@ -1,4 +1,4 @@
-RDS_HOST: online-queue.123456789012.us-east-1.rds.amazonaws.com:3306
+RDS_HOST: localhost:3306
 RDS_SESSION_USERNAME : session
 RDS_SESSION_PASSWORD : HappyHour&
 RDS_PURCHASE_USERNAME : purchase

@@ -3,9 +3,9 @@ from session import get, is_in_queue, is_expired, get_waiting_time, get_waiting_
 from orm import Session
 
 def status(event, context):
-    if 'session_uuid' not in event or not event['session_uuid']:
-        return response.failure("Unable to retrieve session_uuid")
-    session_uuid = event['session_uuid']
+    if 'Session' not in event or not event['Session']:
+        return response.failure("Unable to retrieve Session")
+    session_uuid = event['Session']
 
     user_session = get(session_uuid)
 

@@ -8,13 +8,15 @@ import os
 app = Flask(__name__)
 
 # Obtain encrypt key
-encrypt_key = os.environ['RDS_ENCRYPT_KEY']
+encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode()
+env_username = os.environ['RDS_USERNAME']
+env_password = os.environ['RDS_PASSWORD']
 fernet = Fernet(encrypt_key) if encrypt_key else None
 
 # MySql datebase
 db_url = os.environ['RDS_HOST']
-db_username = fernet.decrypt(os.environ['RDS_USERNAME']).decode() if encrypt_key is not None else os.environ['RDS_USERNAME']
-db_password = fernet.decrypt(os.environ['RDS_PASSWORD']).encode() if encrypt_key is not None else os.environ['RDS_PASSWORD']
+db_username = fernet.decrypt(env_username.encode()).decode() if encrypt_key is not None else env_username
+db_password = fernet.decrypt(env_password.encode()).decode() if encrypt_key is not None else env_password
 db_target = os.environ['RDS_DEFAULT_DB']
 
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

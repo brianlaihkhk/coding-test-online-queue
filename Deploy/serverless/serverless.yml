@@ -62,8 +62,8 @@ functions:
         private: true
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
-      RDS_ORDER_USERNAME: ${self:custom.env.RDS_ORDER_USERNAME}
-      RDS_ORDER_PASSWORD: ${self:custom.env.RDS_ORDER_PASSWORD}
+      RDS_USERNAME: ${self:custom.env.RDS_ORDER_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_ORDER_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
@@ -87,8 +87,8 @@ functions:
         private: true
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
-      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
-      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
@@ -113,8 +113,8 @@ functions:
         private: true      
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
-      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
-      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
       SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
@@ -141,8 +141,8 @@ functions:
         private: true      
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
-      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
-      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
