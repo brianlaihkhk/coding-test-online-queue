@@ -5,7 +5,7 @@ custom:
   env: ${file(../resources/env-${self:provider.stage}.yml)}
   encrypt: ${file(../resources/encrypt-${self:provider.stage}.yml)}
   pythonRequirements:
-    dockerizePip: non-linux
+    dockerizePip: true
   prune:
     automatic: true
     includeLayers: true
@@ -32,13 +32,21 @@ plugins:
 iamRoleStatements:
   - Effect: "Allow"
     Action:
-      - "rds:*"
+      - "lambda:*"
+      - "apigateway:GET"
+      - "apigateway:PATCH"
+      - "apigateway:POST"
+      - "apigateway:PUT"
+      - "apigateway:DELETE"
+      - "logs:CreateLogGroup"
+      - "logs:CreateLogStream"
+      - "logs:PutLogEvents"
     Resource: "*"
 
 functions:
   ping:
     name: order-ping-${self:provider.stage}
-    handler: Order/ping.ping
+    handler: ping.ping
     package: {}
     events:
     -
@@ -46,11 +54,11 @@ functions:
         path: ping
         method: GET
         cors: true
-        private: true
+        private: false
 
   order:
     name: order-order-${self:provider.stage}
-    handler: Order/order.purchase
+    handler: order.purchase
     timeout: 30
     package: {}
     events:
@@ -59,7 +67,7 @@ functions:
         path: order
         method: POST
         cors: true
-        private: true
+        private: false
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
       RDS_USERNAME: ${self:custom.env.RDS_ORDER_USERNAME}
@@ -76,7 +84,7 @@ functions:
 
   status:
     name: order-status-${self:provider.stage}
-    handler: Order/status.queue_status
+    handler: status.queue_status
     timeout: 30
     package: {}
     events:
@@ -85,7 +93,7 @@ functions:
         path: status
         method: GET
         cors: true
-        private: true
+        private: false
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
       RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
@@ -102,7 +110,7 @@ functions:
 
   session:
     name: order-session-${self:provider.stage}
-    handler: Order/session.new
+    handler: session.new
     timeout: 30
     package: {}
     events:
@@ -111,7 +119,7 @@ functions:
         path: session
         method: GET
         cors: true
-        private: true      
+        private: false      
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
       RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
@@ -130,7 +138,7 @@ functions:
 
   item:
     name: order-item-${self:provider.stage}
-    handler: Order/item.list
+    handler: item.list
     timeout: 30
     package: {}
     events:
@@ -139,7 +147,7 @@ functions:
         path: item
         method: GET
         cors: true
-        private: true      
+        private: false      
     environment:
       RDS_HOST: ${self:custom.env.RDS_HOST}
       RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
