@@ -1,0 +1,25 @@
+Request Header :
+Session=ccd9be67-a653-4adf-85f5-24275832dc36
+
+Response Body : 
+{
+  "success": true,
+  "payload": {
+    "in_queue": false
+  }
+}
+
+
+{
+  "success": false,
+  "payload": "Session is expired"
+}
+
+{
+  "success": true,
+  "payload": {
+    "in_queue": true,
+    "waiting_time": 1.9290123456790122,
+    "waiting_position": 1234
+  }
+}

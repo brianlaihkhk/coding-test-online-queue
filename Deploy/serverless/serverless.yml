@@ -48,8 +48,8 @@ functions:
         cors: true
         private: true
 
-  purchase:
-    name: order-purchase-${opt:stage}
+  order:
+    name: order-order-${opt:stage}
     handler: Order/order.purchase
     timeout: 30
     package: {}
@@ -74,9 +74,9 @@ functions:
       - ${self:custom.env.VPC_SUBNET_B}
       - ${self:custom.env.VPC_SUBNET_C}
 
-  queue:
-    name: order-queue-${opt:stage}
-    handler: Order/queue.status
+  status:
+    name: order-status-${opt:stage}
+    handler: Order/status.queue_status
     timeout: 30
     package: {}
     -

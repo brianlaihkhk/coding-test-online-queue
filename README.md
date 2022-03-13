@@ -11,12 +11,13 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Folder
 
-- Test Data : Data for testing in passing json
+- Test Data : Data for testing in endpoints
 - Order : Order with online queue system using Python for AWS Lambda serving
 - Client : Client UI for online queue waiting and place orders after queuing
 - Documentation : Documentation
 - Setup : Setup script for database initialization
 - Deploy : Deployment script for Serverless framework
+- Tools : Tools for encryption (in env-prd.yml), encoding and local server script for testing
 
 ### Prerequsite
 

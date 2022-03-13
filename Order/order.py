@@ -2,9 +2,10 @@ import uuid
 import response
 import jwt
 import time
-import db
+from db import db
 from session import is_valid, get
-from orm import Session, Purchase, User
+import traceback
+from orm import Purchase, User
 
 def purchase(event, context):
     if 'Session' not in event or not event['Session']:
@@ -21,7 +22,7 @@ def purchase(event, context):
 
     try:
         payload = jwt.decode(user_authorization, user_session.JWT_TOKEN, algorithms=["HS256"])
-    except:
+    except Exception:
         return response.failure("Unable to decrypt message")
 
     if 'user' not in payload:
@@ -34,7 +35,7 @@ def purchase(event, context):
         for purchase_item in payload['purchase']:
             create_purchase(user_uuid, purchase_item)
         db.session.commit()
-    except:
+    except Exception:
         return response.failure("Unable to create purchase")
 
     return response.success("success")
@@ -42,10 +43,14 @@ def purchase(event, context):
 def create_user(user_uuid, new_user):
     epoch_time = int(time.time())
     create_user = User(user_uuid, new_user['first_name'], new_user['last_name'], new_user['email'], new_user['mobile'], epoch_time)
-    return User.add(create_user)
+    db.session.add(create_user)
+    db.session.commit()
+    return
 
 def create_purchase(user_uuid, new_purchase):
     purchase_uuid = str(uuid.uuid4())
     epoch_time = int(time.time())
-    create_purchase = Purchase(purchase_uuid, user_uuid, new_purchase['item_uuid'], new_purchase['quantity'], epoch_time)
-    return Purchase.add(create_purchase)
+    create_purchase = Purchase(purchase_uuid, user_uuid, new_purchase['item_uuid'], int(new_purchase['quantity']), epoch_time)
+    db.session.add(create_purchase)
+    db.session.commit()
+    return

@@ -8,7 +8,7 @@ cp -rf serverless/ build/
 mkdir build/Order/
 cp -rf ../Order/ build/Order/
 
-pip3 install -I -t build/ -r serverless/package.txt
+pip3 install -I -t build/ -r ../package.txt
 
 cd build/
 npm install serverless@1.73.1

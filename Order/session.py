@@ -3,7 +3,8 @@ import response
 import time
 import uuid
 import os
-import db
+from db import db
+import traceback
 from orm import Session
 
 expiration_minute = int(os.environ['SESSION_EXPIRATION_MINUTE'])
@@ -16,11 +17,11 @@ def new(event, context):
 
     try:
         new_session = Session(session_uuid, jwt_token, epoch_time, is_in_queue)
-        Session.add(new_session)
+        db.session.add(new_session)
         db.session.commit()
-    except:
+    except Exception:
         return response.failure("Error in generating session")
-    return response.success(session_uuid)
+    return response.success({"session" : session_uuid, "jwt_token" : jwt_token})
 
 def get(session_uuid):
     filters = {'SESSION_UUID': session_uuid}
@@ -54,4 +55,5 @@ def get_waiting_position(user_session):
         return -1
 
     filters = db.and_( Session.IS_IN_QUEUE == True , Session.CREATION_EPOCH_TIME < user_session.CREATION_EPOCH_TIME)
-    return Session.query(db.funct.count(Session.SESSION_UUID)).filter(**filters).count()
+    count = db.session.query(db.func.count(Session.SESSION_UUID)).filter(filters).count()
+    return count

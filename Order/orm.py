@@ -39,7 +39,7 @@ class Item(db.Model):
     ITEM_UUID = db.Column(db.String, primary_key=True)
     ITEM_NAME = db.Column(db.String, nullable=False)
     ITEM_DESCRIPTION = db.Column(db.String, nullable=False)
-    PRICE = db.Column(db.Float(precision=5, scale=2), nullable=False)
+    PRICE = db.Column(db.DECIMAL(precision=5, scale=2), nullable=False)
     CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
 
     def __init__(self, item_uuid, item_name, item_description, price, creation_epoch_time):
@@ -53,8 +53,8 @@ class Purchase(db.Model):
     __tablename__ = 'PURCHASE'
 
     PURCHASE_UUID = db.Column(db.String, primary_key=True)
-    USER_UUID = db.Column(db.String, nullable=False, db.ForeignKey('USER.USER_UUID'))
-    ITEM_UUID = db.Column(db.String, nullable=False, db.ForeignKey('ITEM.ITEM_UUID'))
+    USER_UUID = db.Column(db.String, db.ForeignKey('USER.USER_UUID'), nullable=False)
+    ITEM_UUID = db.Column(db.String, db.ForeignKey('ITEM.ITEM_UUID'), nullable=False)
     QUANTITY = db.Column(db.Integer, nullable=False)
     CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
 

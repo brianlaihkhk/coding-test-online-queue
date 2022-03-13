@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 # Obtain encrypt key
-encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode()
+encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode() if 'RDS_ENCRYPT_KEY' in os.environ else None
 env_username = os.environ['RDS_USERNAME']
 env_password = os.environ['RDS_PASSWORD']
 fernet = Fernet(encrypt_key) if encrypt_key else None

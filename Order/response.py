@@ -18,8 +18,8 @@ def build_response(statusCode, success, payload):
 
     return response
 
-def success(body) :
-    return build_response(200, True, body)
+def success(return_body) :
+    return build_response(200, True, return_body)
 
-def failure(body) :
-    return build_response(500, False, body)
+def failure(return_body) :
+    return build_response(500, False, return_body)

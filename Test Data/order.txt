@@ -1,0 +1,9 @@
+Request Header :
+Session=ccd9be67-a653-4adf-85f5-24275832dc36
+Authorization=Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7ImZpcnN0X25hbWUiOiJMaWV1IiwibGFzdF9uYW1lIjoiTWFuZHkiLCJlbWFpbCI6Im1hbmR5LmxpZXVAdGVzdC5jb20iLCJtb2JpbGUiOiI5OTkxMjM0NSJ9LCJwdXJjaGFzZSI6W3siaXRlbV91dWlkIjoiMjkzNWYzNTQtZDUyNy00Njg5LWI2MjQtZTAxNDYyMjU3N2ViIiwicXVhbnRpdHkiOjJ9LHsiaXRlbV91dWlkIjoiOTY4YWRiYjktNTZkZi00MDU2LTlmZmUtNWNlNzg3Y2NlNjU5IiwicXVhbnRpdHkiOjN9XX0.HvPwGoNOOd3Wp25MIDzlkTD_bZL6M3s4u4S29Tvjgdw
+
+Response Body :
+{
+  "success": true,
+  "payload": "success"
+}
