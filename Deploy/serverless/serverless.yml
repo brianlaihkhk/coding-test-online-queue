@@ -1,9 +1,9 @@
 service: order
 
 custom:
-  stage: ${opt:stage, self:provider.stage}
-  env: ${file(../resources/env-${opt:stage, self:provider.stage}.yml)}
-  encrypt: ${file(../resources/encrypt-${opt:stage, self:provider.stage}.yml)}
+  stage: ${self:provider.stage}
+  env: ${file(../resources/env-${self:provider.stage}.yml)}
+  encrypt: ${file(../resources/encrypt-${self:provider.stage}.yml)}
   pythonRequirements:
     dockerizePip: non-linux
   prune:
@@ -21,7 +21,7 @@ package:
 provider:
   name: aws
   runtime: python3.8
-  stage: dev
+  stage: prd
   region: ap-southeast-1
 
 plugins:
@@ -37,7 +37,7 @@ iamRoleStatements:
 
 functions:
   ping:
-    name: order-ping-${opt:stage}
+    name: order-ping-${self:provider.stage}
     handler: Order/ping.ping
     package: {}
     events:
@@ -49,14 +49,14 @@ functions:
         private: true
 
   order:
-    name: order-order-${opt:stage}
+    name: order-order-${self:provider.stage}
     handler: Order/order.purchase
     timeout: 30
     package: {}
     events:
     -
       http:
-        path: purchase
+        path: order
         method: POST
         cors: true
         private: true
@@ -75,10 +75,11 @@ functions:
       - ${self:custom.env.VPC_SUBNET_C}
 
   status:
-    name: order-status-${opt:stage}
+    name: order-status-${self:provider.stage}
     handler: Order/status.queue_status
     timeout: 30
     package: {}
+    events:
     -
       http:
         path: status
@@ -100,12 +101,12 @@ functions:
       - ${self:custom.env.VPC_SUBNET_C}
 
   session:
-    name: order-session-${opt:stage}
+    name: order-session-${self:provider.stage}
     handler: Order/session.new
     timeout: 30
     package: {}
     events:
-      - 
+    -
       http:
         path: session
         method: GET
@@ -128,12 +129,12 @@ functions:
 
 
   item:
-    name: order-item-${opt:stage}
+    name: order-item-${self:provider.stage}
     handler: Order/item.list
     timeout: 30
     package: {}
     events:
-      - 
+    -
       http:
         path: item
         method: GET
