@@ -1,10 +1,11 @@
-RDS_HOST: online-queue.123456789012.us-east-1.rds.amazonaws.com
+RDS_HOST: online-queue.123456789012.us-east-1.rds.amazonaws.com:3306
 RDS_SESSION_USERNAME : session
 RDS_SESSION_PASSWORD : HappyHour&
 RDS_PURCHASE_USERNAME : purchase
 RDS_PURCHASE_PASSWORD : MorningSunshine$
 RDS_DEFAULT_DB : ORDER
-CONFIG_ENCRYPTED : False
+
+SESSION_EXPIRATION_MINUTE : 10
 
 VPC_SUBNET_A : subnet-4d4ba02b
 VPC_SUBNET_B : subnet-822781db

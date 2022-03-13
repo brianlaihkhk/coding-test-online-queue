@@ -3,9 +3,9 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Features
 
-- Framework used (Client) : 
-- Framework used (Order + queue system) : SQLAlchemy orm, 
-- Framework used (Deployment) : Serverless framework
+- Framework used (Client) : jsonwebtoken
+- Framework used (Order + queue system) : SQLAlchemy orm, PyJWT, Flask, Fernet, pymysql
+- Framework used (DevOps) : Serverless framework
 - Serverless + distributed design using AWS Lambda
 - Session based token for queuing
 

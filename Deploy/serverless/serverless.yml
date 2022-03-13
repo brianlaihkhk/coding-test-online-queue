@@ -2,7 +2,8 @@ service: order
 
 custom:
   stage: ${opt:stage, self:provider.stage}
-  env: ${file(../resources/env-${opt:stage, 'dev'}.yml)}
+  env: ${file(../resources/env-${opt:stage, self:provider.stage}.yml)}
+  encrypt: ${file(../resources/encrypt-${opt:stage, self:provider.stage}.yml)}
   pythonRequirements:
     dockerizePip: non-linux
   prune:
@@ -20,7 +21,7 @@ package:
 provider:
   name: aws
   runtime: python3.8
-  stage: prd
+  stage: dev
   region: ap-southeast-1
 
 plugins:
@@ -49,7 +50,7 @@ functions:
 
   purchase:
     name: order-purchase-${opt:stage}
-    handler: Order/purchase.purchase
+    handler: Order/order.purchase
     timeout: 30
     package: {}
     events:
@@ -64,6 +65,7 @@ functions:
       RDS_ORDER_USERNAME: ${self:custom.env.RDS_ORDER_USERNAME}
       RDS_ORDER_PASSWORD: ${self:custom.env.RDS_ORDER_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}
@@ -88,6 +90,7 @@ functions:
       RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
       RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}
@@ -113,6 +116,35 @@ functions:
       RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
       RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
+
+
+  item:
+    name: order-item-${opt:stage}
+    handler: Order/item.list
+    timeout: 30
+    package: {}
+    events:
+      - 
+      http:
+        path: item
+        method: GET
+        cors: true
+        private: true      
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_SESSION_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_SESSION_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}

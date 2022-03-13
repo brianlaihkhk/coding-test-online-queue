@@ -1,37 +1,66 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Float
+from db import db
 
-class User(Base):
+class User(db.Model):
     __tablename__ = 'USER'
 
-    USER_UUID = Column(String, primary_key=True)
-    FIRST_NAME = Column(String, nullable=False)
-    LAST_NAME = Column(String, nullable=False)
-    EMAIL = Column(String, nullable=False)
-    MOBILE = Column(String, nullable=False)
-    CREATION_EPOCH_TIME = Column(Integer, nullable=False)
+    USER_UUID = db.Column(db.String, primary_key=True)
+    FIRST_NAME = db.Column(db.String, nullable=False)
+    LAST_NAME = db.Column(db.String, nullable=False)
+    EMAIL = db.Column(db.String, nullable=False)
+    MOBILE = db.Column(db.String, nullable=False)
+    CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
 
-class Session(Base):
+    def __init__(self, user_uuid, first_name, last_name, email, mobile, creation_epoch_time):
+        self.USER_UUID = user_uuid
+        self.FIRST_NAME = first_name
+        self.LAST_NAME = last_name
+        self.EMAIL = email
+        self.MOBILE = mobile
+        self.CREATION_EPOCH_TIME = creation_epoch_time
+
+
+class Session(db.Model):
     __tablename__ = 'SESSION'
 
-    SESSION_UUID = Column(String, primary_key=True)
-    SESSION_TOKEN = Column(String, nullable=False)
-    CREATION_EPOCH_TIME = Column(Integer, nullable=False)
-    IS_IN_QUEUE = Column(Boolean, nullable=False)
+    SESSION_UUID = db.Column(db.String, primary_key=True)
+    JWT_TOKEN = db.Column(db.String, nullable=False)
+    CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
+    IS_IN_QUEUE = db.Column(db.Boolean, nullable=False)
 
-class Item(Base):
+    def __init__(self, session_uuid, jwt_token, creation_epoch_time, is_in_queue):
+        self.SESSION_UUID = session_uuid
+        self.JWT_TOKEN = jwt_token
+        self.CREATION_EPOCH_TIME = creation_epoch_time
+        self.IS_IN_QUEUE = is_in_queue
+
+class Item(db.Model):
     __tablename__ = 'ITEM'
 
-    ITEM_UUID = Column(String, primary_key=True)
-    ITEM_NAME = Column(String, nullable=False)
-    ITEM_DESCRIPTION = Column(String, nullable=False)
-    PRICE = Column(Float(precision=5, scale=2), nullable=False)
-    CREATION_EPOCH_TIME = Column(Integer, nullable=False)
+    ITEM_UUID = db.Column(db.String, primary_key=True)
+    ITEM_NAME = db.Column(db.String, nullable=False)
+    ITEM_DESCRIPTION = db.Column(db.String, nullable=False)
+    PRICE = db.Column(db.Float(precision=5, scale=2), nullable=False)
+    CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
 
-class Purchase(Base):
+    def __init__(self, item_uuid, item_name, item_description, price, creation_epoch_time):
+        self.ITEM_UUID = item_uuid
+        self.ITEM_NAME = item_name
+        self.ITEM_DESCRIPTION = item_description
+        self.PRICE = price
+        self.CREATION_EPOCH_TIME = creation_epoch_time
+
+class Purchase(db.Model):
     __tablename__ = 'PURCHASE'
 
-    PURCHASE_UUID = Column(String, primary_key=True)
-    USER_UUID = Column(String, nullable=False, ForeignKey('USER.USER_UUID'))
-    ITEM_UUID = Column(String, nullable=False, ForeignKey('ITEM.ITEM_UUID'))
-    QUANTITY = Column(Integer, nullable=False)
-    CREATION_EPOCH_TIME = Column(Integer, nullable=False)
+    PURCHASE_UUID = db.Column(db.String, primary_key=True)
+    USER_UUID = db.Column(db.String, nullable=False, db.ForeignKey('USER.USER_UUID'))
+    ITEM_UUID = db.Column(db.String, nullable=False, db.ForeignKey('ITEM.ITEM_UUID'))
+    QUANTITY = db.Column(db.Integer, nullable=False)
+    CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, purchase_uuid, user_uuid, item_uuid, quantity, creation_epoch_time):
+        self.PURCHASE_UUID = purchase_uuid
+        self.USER_UUID = user_uuid
+        self.ITEM_UUID = item_uuid
+        self.QUANTITY = quantity
+        self.CREATION_EPOCH_TIME = creation_epoch_time

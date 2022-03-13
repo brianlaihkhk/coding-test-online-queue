@@ -1,6 +1,6 @@
 import json
 
-def buildResponse(statusCode, success, payload):
+def build_response(statusCode, success, payload):
 
     body = {
         "success": success,
@@ -19,7 +19,7 @@ def buildResponse(statusCode, success, payload):
     return response
 
 def success(body) :
-    return buildResponse(200, True, body)
+    return build_response(200, True, body)
 
 def failure(body) :
-    return buildResponse(500, False, body)
+    return build_response(500, False, body)
