@@ -60,16 +60,20 @@ def get_waiting_position(user_session):
     return count
 
 def update_queue():
-    epoch_time = int(time.time())
     concurrent_users = Session.query.filter_by(IS_IN_QUEUE = False).count()
     waiting_users = Session.query.filter_by(IS_IN_QUEUE = True).order_by(Session.SESSION_EPOCH_TIME.asc()).limit(concurrent_maximum_users - concurrent_users).all()
 
-    for user in waiting_users :
-        user.IS_IN_QUEUE = False
-        user.SESSION_EPOCH_TIME = epoch_time
+    for user_session in waiting_users :
+        update_finish_queue_session(user_session)
 
-    db.session.commit()
     return True
+
+def update_finish_queue_session(user_session) :
+    epoch_time = int(time.time())
+    user_session.IS_IN_QUEUE = False
+    user_session.SESSION_EPOCH_TIME = epoch_time
+    db.session.commit()
+    return user_session
 
 
 def delete_old_session():

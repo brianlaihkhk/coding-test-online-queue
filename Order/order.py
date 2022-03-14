@@ -8,14 +8,15 @@ import traceback
 from orm import Purchase, User
 
 def purchase(event, context):
-    if 'header' not in event or 'Session' not in event['header'] or not event['header']['Session']:
+    if 'headers' not in event or 'Session' not in event['headers'] or not event['headers']['Session']:
         return response.failure("Unable to retrieve Session")
-    if 'header' not in event or 'Authorization' not in event['header'] or not event['header']['Authorization']:
+    if 'headers' not in event or 'Authorization' not in event['headers'] or not event['headers']['Authorization']:
         return response.failure("Unable to retrieve Authorization message")
 
-    user_session = get(event['header']['Session'])
-    user_authorization = str(event['header']['Authorization']).lstrip("Bearer").strip()
+    user_session = get(event['headers']['Session'])
+    user_authorization = str(event['headers']['Authorization']).lstrip("Bearer").strip()
     user_uuid = str(uuid.uuid4())
+    purchase_uuid_list = []
 
     if not is_valid(user_session):
         return response.failure("Session is expired or waiting")
@@ -33,19 +34,19 @@ def purchase(event, context):
     try:
         create_user(user_uuid, payload['user'])
         for purchase_item in payload['purchase']:
-            create_purchase(user_uuid, purchase_item)
+            purchase_uuid_list.append(create_purchase(user_uuid, purchase_item))
         db.session.commit()
     except Exception:
         return response.failure("Unable to create purchase")
 
-    return response.success("success")
+    return response.success({"user" : user_uuid, "purchase" : purchase_uuid_list})
 
 def create_user(user_uuid, new_user):
     epoch_time = int(time.time())
     create_user = User(user_uuid, new_user['first_name'], new_user['last_name'], new_user['email'], new_user['mobile'], epoch_time)
     db.session.add(create_user)
     db.session.commit()
-    return
+    return user_uuid
 
 def create_purchase(user_uuid, new_purchase):
     purchase_uuid = str(uuid.uuid4())
@@ -53,4 +54,4 @@ def create_purchase(user_uuid, new_purchase):
     create_purchase = Purchase(purchase_uuid, user_uuid, new_purchase['item_uuid'], int(new_purchase['quantity']), epoch_time)
     db.session.add(create_purchase)
     db.session.commit()
-    return
+    return purchase_uuid

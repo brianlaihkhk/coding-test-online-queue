@@ -31,6 +31,7 @@ case "$2" in
             serverless deploy function --function status
             serverless deploy function --function session
             serverless deploy function --function item
+            serverless deploy function --function populate
         elif [[ $3 -eq "item" ]]
         then
             serverless deploy function --function item
@@ -43,6 +44,9 @@ case "$2" in
         elif [[ $3 -eq "session" ]]
         then
             serverless deploy function --function session
+        elif [[ $3 -eq "populate" ]]
+        then
+            serverless deploy function --function populate
         elif [[ $3 -eq "ping" ]]
         then
             serverless deploy function --function ping
