@@ -12,6 +12,7 @@ with open("../Deploy/resources/env-dev.yml", "r") as stream:
         os.environ['RDS_HOST'] = env['RDS_HOST']
         os.environ['RDS_DEFAULT_DB'] = env['RDS_DEFAULT_DB']
         os.environ['SESSION_EXPIRATION_MINUTE'] = str(env['SESSION_EXPIRATION_MINUTE'])
+        os.environ['CONCURRENT_MAXIMUM_USERS'] = str(env['CONCURRENT_MAXIMUM_USERS'])
     except yaml.YAMLError as exc:
         print(exc)
 
@@ -27,7 +28,7 @@ import response
 class LocalServerRouter(BaseHTTPRequestHandler):
     def do_GET(self):
         return_response = response.failure("Error or unsupported operations")
-        event = {"Session" : self.headers['Session']}
+        event = {"headers" : self.headers}
         context = {}
 
         try:
@@ -43,6 +44,9 @@ class LocalServerRouter(BaseHTTPRequestHandler):
             elif self.path.endswith('/ping'):
                 return_response = ping.ping(event, context)
                 self.send_response(200)
+            elif self.path.endswith('/populate'):
+                return_response = session.populate_session(event, context)
+                self.send_response(200)
             else :
                 self.send_response(500)
         except Exception:
@@ -55,7 +59,7 @@ class LocalServerRouter(BaseHTTPRequestHandler):
         
     def do_POST(self):
         return_response = response.failure("Error or unsupported operations")
-        event = {"Session" : self.headers['Session'], "Authorization" : self.headers['Authorization']}
+        event = {"headers" : self.headers}
         context = {}
         try:
             if self.path.endswith('/order'):

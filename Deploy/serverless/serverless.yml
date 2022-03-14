@@ -74,6 +74,8 @@ functions:
       RDS_PASSWORD: ${self:custom.env.RDS_ORDER_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+      CONCURRENT_MAXIMUM_USERS : ${self:custom.env.CONCURRENT_MAXIMUM_USERS}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}
@@ -100,6 +102,8 @@ functions:
       RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+      CONCURRENT_MAXIMUM_USERS : ${self:custom.env.CONCURRENT_MAXIMUM_USERS}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}
@@ -127,6 +131,7 @@ functions:
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
       SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+      CONCURRENT_MAXIMUM_USERS : ${self:custom.env.CONCURRENT_MAXIMUM_USERS}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}
@@ -135,6 +140,34 @@ functions:
       - ${self:custom.env.VPC_SUBNET_B}
       - ${self:custom.env.VPC_SUBNET_C}
 
+
+  populate:
+    name: order-session-${self:provider.stage}
+    handler: session.populate_session
+    timeout: 30
+    package: {}
+    events:
+    -
+      http:
+        path: populate
+        method: GET
+        cors: true
+        private: false      
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_USERNAME: ${self:custom.env.RDS_SESSION_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+      CONCURRENT_MAXIMUM_USERS : ${self:custom.env.CONCURRENT_MAXIMUM_USERS}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
 
   item:
     name: order-item-${self:provider.stage}
@@ -154,6 +187,8 @@ functions:
       RDS_PASSWORD: ${self:custom.env.RDS_SESSION_PASSWORD}
       RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
       RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      SESSION_EXPIRATION_MINUTE :  ${self:custom.env.SESSION_EXPIRATION_MINUTE}
+      CONCURRENT_MAXIMUM_USERS : ${self:custom.env.CONCURRENT_MAXIMUM_USERS}
     vpc:
       securityGroupIds:
       - ${self:custom.env.VPC_SECURITY_GROUP}

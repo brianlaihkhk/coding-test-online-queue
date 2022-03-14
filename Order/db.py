@@ -1,8 +1,7 @@
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from cryptography.fernet import Fernet
+import jwt
 import os
 
 app = Flask(__name__)
@@ -11,15 +10,14 @@ app = Flask(__name__)
 encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode() if 'RDS_ENCRYPT_KEY' in os.environ else None
 env_username = os.environ['RDS_USERNAME']
 env_password = os.environ['RDS_PASSWORD']
-fernet = Fernet(encrypt_key) if encrypt_key else None
 
 # MySql datebase
 db_url = os.environ['RDS_HOST']
-db_username = fernet.decrypt(env_username.encode()).decode() if encrypt_key is not None else env_username
-db_password = fernet.decrypt(env_password.encode()).decode() if encrypt_key is not None else env_password
+db_username = jwt.decode(env_username, encrypt_key, algorithms=["HS256"])["body"] if encrypt_key is not None else env_username
+db_password = jwt.decode(env_password, encrypt_key, algorithms=["HS256"])["body"] if encrypt_key is not None else env_password
 db_target = os.environ['RDS_DEFAULT_DB']
 
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target
 
 db = SQLAlchemy(app)

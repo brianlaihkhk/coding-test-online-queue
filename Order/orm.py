@@ -24,13 +24,13 @@ class Session(db.Model):
 
     SESSION_UUID = db.Column(db.String, primary_key=True)
     JWT_TOKEN = db.Column(db.String, nullable=False)
-    CREATION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
+    SESSION_EPOCH_TIME = db.Column(db.Integer, nullable=False)
     IS_IN_QUEUE = db.Column(db.Boolean, nullable=False)
 
-    def __init__(self, session_uuid, jwt_token, creation_epoch_time, is_in_queue):
+    def __init__(self, session_uuid, jwt_token, session_epoch_time, is_in_queue):
         self.SESSION_UUID = session_uuid
         self.JWT_TOKEN = jwt_token
-        self.CREATION_EPOCH_TIME = creation_epoch_time
+        self.SESSION_EPOCH_TIME = session_epoch_time
         self.IS_IN_QUEUE = is_in_queue
 
 class Item(db.Model):
