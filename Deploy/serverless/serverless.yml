@@ -142,7 +142,7 @@ functions:
 
 
   populate:
-    name: order-session-${self:provider.stage}
+    name: order-populate-${self:provider.stage}
     handler: session.populate_session
     timeout: 30
     package: {}

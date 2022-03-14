@@ -16,6 +16,7 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Folder
 
+- Unit Test : Functional unit test code
 - Test Data : Data for testing in endpoints
 - Order : Order with online queue system using Python for AWS Lambda serving
 - Client : Client UI for online queue waiting and place orders after queuing
@@ -44,6 +45,10 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 ### Time limit
 
 - 48 hours
+
+### Remarks
+
+- Using cryptography / cryptocode / simple-crypt will show **invalid elf header** in AWS Lambda (Under osx development). This project will use JWT for configuration encryption and decryption.
 
 ### Contact
 - Linkedin : https://www.linkedin.com/in/brianlaihk/
