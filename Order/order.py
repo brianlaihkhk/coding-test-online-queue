@@ -8,13 +8,13 @@ import traceback
 from orm import Purchase, User
 
 def purchase(event, context):
-    if 'Session' not in event or not event['Session']:
+    if 'header' not in event or 'Session' not in event['header'] or not event['header']['Session']:
         return response.failure("Unable to retrieve Session")
-    if 'Authorization' not in event or not event['Authorization']:
+    if 'header' not in event or 'Authorization' not in event['header'] or not event['header']['Authorization']:
         return response.failure("Unable to retrieve Authorization message")
 
-    user_session = get(event['Session'])
-    user_authorization = str(event['Authorization']).lstrip("Bearer").strip()
+    user_session = get(event['header']['Session'])
+    user_authorization = str(event['header']['Authorization']).lstrip("Bearer").strip()
     user_uuid = str(uuid.uuid4())
 
     if not is_valid(user_session):

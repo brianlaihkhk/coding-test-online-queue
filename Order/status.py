@@ -1,12 +1,18 @@
 import response
-from session import get, is_in_queue, is_expired, get_waiting_time, get_waiting_position
+from session import get, is_in_queue, is_expired, get_waiting_time, get_waiting_position, update_queue, delete_old_session
 from orm import Session
+import os
+
+expiration_minute = int(os.environ['SESSION_EXPIRATION_MINUTE'])
 
 def queue_status(event, context):
-    if 'Session' not in event or not event['Session']:
+    if 'headers' not in event or 'Session' not in event['headers'] or not event['headers']['Session']:
         return response.failure("Unable to retrieve Session")
-    session_uuid = event['Session']
 
+    delete_old_session()
+    update_queue()
+
+    session_uuid = event['headers']['Session']
     user_session = get(session_uuid)
 
     if user_session is None or is_expired(user_session):
@@ -17,5 +23,5 @@ def queue_status(event, context):
         waiting_position = get_waiting_position(user_session)
         return response.success({"in_queue" : True, "waiting_time" : waiting_time, "waiting_position" : waiting_position})
 
-    return response.success({"in_queue" : False})
+    return response.success({"in_queue" : False, "token_valid_until" : int(user_session.SESSION_EPOCH_TIME) + expiration_minute})
 

@@ -56,4 +56,4 @@ case "$2" in
         ;;
   esac
 
-# rm -rf build/
+rm -rf build/
