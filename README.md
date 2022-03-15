@@ -10,7 +10,7 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Framework 
 
-- Client : ReactJs, jsonwebtoken
+- Client : reactJs, Babel / jsx, jwt-simple
 - Order + queue system : SQLAlchemy orm, PyJWT, Flask, pymysql, unittest
 - Deployment : Serverless
 
