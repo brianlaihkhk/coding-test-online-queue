@@ -1,24 +1,30 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 
 // Item
 
-const Item = (props) => {
+class Item extends Component {
+  constructor(props) {
+    this.key = props.key;
+    this.updateItem = props.updateItem;
+  }
 
   updateQuantity = (e) => {
     var item = {};
-    item['key'] = props.key;
+    item['key'] = this.key;
     item['quantity'] = e.target.value;
-    this.props.updateItem(item);
+    this.updateItem(item);
   }
 
-  return (
-      <div>
-        <span>Item : {props.name} </span>
-        <span>Description : {props.description} </span>
-        <span>Price : {props.price} </span>
-        <span>Enter the quantity to purchase : <input type="text" name="quantity" onChange={this.updateQuantity} /></span>
-      </div>
-  );
+  render() {
+    return (
+        <div>
+          <span>Item : {this.props.name} </span>
+          <span>Description : {this.props.description} </span>
+          <span>Price : {this.props.price} </span>
+          <span>Enter the quantity to purchase : <input type="text" name="quantity" onChange={this.updateQuantity} /></span>
+        </div>
+    );
+  }
 };
 
 export default Item;

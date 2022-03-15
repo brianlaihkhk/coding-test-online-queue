@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 
 // Show queue waiting
 class QueueStatus extends Component {

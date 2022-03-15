@@ -1,12 +1,17 @@
-import React from "react";
+import React, {Component} from "react";
 import UserForm from "./user_form";
 import Item from "./item";
 var jwt = require('jwt-simple');
 
 // User Contact Form
-const OrderForm = (props) => {
-  cart = new Map();
-  user = {}
+class OrderForm extends Component {
+  constructor(props){
+    super(props);
+    this.cart = new Map();
+    this.user = {};
+    this.session = props.session;
+    this.submitOrder = props.submitOrder;
+  }
 
   updateItem = (item) => {
     this.cart.set(item.key, item.quantity);
@@ -17,39 +22,40 @@ const OrderForm = (props) => {
   }
 
   convertPurchase = (session) => {
-    jwt = session.jwt_token
-    purchase = []
-    cart.map((key, quantity) => purchase.append({"item_uuid" : key , "quantity" : quantity}))
+    var jwt = session.jwt_token
+    var purchase = []
+    this.cart.map((key, quantity) => this.purchase.append({"item_uuid" : key , "quantity" : quantity}))
 
-    jwt_message = jwt.decode({"user" : user, "purchase" : purchase}, jwt);
+    var jwt_message = jwt.decode({"user" : this.user, "purchase" : purchase}, jwt);
     return {"Session" : session.session, "Authorization" : jwt_message}
   }
 
   submitPurchase = (e) => {
-    header = convertPurchase(this.props.session);
-    this.props.submitOrder(e, header);
+    var header = this.convertPurchase(this.session);
+    this.submitOrder(e, header);
   }
 
-  return (
-      <div>
-        {props.items.map((item) => {
-            <Item key={item.item_uuid}
-                  name={item.item_name} 
-                  description={item.item_description}
-                  price={item.price}
-                  updateItem={updateItem} />
-          })                            
-        }
+  render() {
+    return (
+        <div>
+          {this.props.items.map((item) => {
+              return <Item key={item.item_uuid}
+                        name={item.item_name} 
+                        description={item.item_description}
+                        price={item.price}
+                        updateItem={this.updateItem} />
+            })                            
+          }
 
-        <UserForm 
-          updateUser={this.updateUser}>
-        </UserForm>
+          <UserForm 
+            updateUser={this.updateUser}>
+          </UserForm>
 
-        <Button onSubmit={this.submitPurchase} />        
-      </div>
-      
-  );
-
+          <button onSubmit={this.submitPurchase} />        
+        </div>
+        
+    );
+  }
 };
 
 

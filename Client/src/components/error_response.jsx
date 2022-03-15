@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component }  from "react";
 
 // Display Error response
 class ErrorResponse extends Component {
