@@ -51,5 +51,5 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 - Using cryptography / cryptocode / simple-crypt will show **invalid elf header** in AWS Lambda (Under osx development). This project will use JWT for configuration encryption and decryption.
 
 ### Contact
-- Linkedin : https://www.linkedin.com/in/brianlaihk/
+- Linkedin : https://www.linkedin.com/in/brianlaihkhk/
 - brianlaihkhk@gmail.com
