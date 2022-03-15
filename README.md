@@ -3,14 +3,20 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Features
 
-- Framework used (Client) : jsonwebtoken
-- Framework used (Order + queue system) : SQLAlchemy orm, PyJWT, Flask, pymysql, unittest
-- Framework used (Deployment) : Serverless
-- Serverless + distributed design using AWS Lambda, AWS Cloudformation (with S3 and ApiGateway)
+- Order + queue system (Support local deployment or AWS Lambda deployment for distributed system)
+- Serverless + distributed design (AWS Lambda, AWS Cloudformation (with S3 and ApiGateway))
 - Session based token for queuing
+- ReactJs for client site, queue waiting and send order after finish queuing
+
+### Framework 
+
+- Client : ReactJs, jsonwebtoken
+- Order + queue system : SQLAlchemy orm, PyJWT, Flask, pymysql, unittest
+- Deployment : Serverless
 
 ### Folder
 
+- Unit Test : Functional unit test code
 - Test Data : Data for testing in endpoints
 - Order : Order with online queue system using Python for AWS Lambda serving
 - Client : Client UI for online queue waiting and place orders after queuing
@@ -39,6 +45,10 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 ### Time limit
 
 - 48 hours
+
+### Remarks
+
+- Using cryptography / cryptocode / simple-crypt will show **invalid elf header** in AWS Lambda (Under osx development). This project will use JWT for configuration encryption and decryption.
 
 ### Contact
 - Linkedin : https://www.linkedin.com/in/brianlaihk/
