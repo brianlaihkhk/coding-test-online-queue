@@ -22,11 +22,11 @@ class OrderForm extends Component {
   }
 
   convertPurchase = (session) => {
-    var jwt = session.jwt_token
+    var jwt_token = session.jwt_token
     var purchase = []
     this.cart.map((key, quantity) => this.purchase.append({"item_uuid" : key , "quantity" : quantity}))
 
-    var jwt_message = jwt.decode({"user" : this.user, "purchase" : purchase}, jwt);
+    var jwt_message = jwt.decode({"user" : this.user, "purchase" : purchase}, jwt_token);
     return {"Session" : session.session, "Authorization" : jwt_message}
   }
 
@@ -51,7 +51,7 @@ class OrderForm extends Component {
             updateUser={this.updateUser}>
           </UserForm>
 
-          <button onSubmit={this.submitPurchase} />        
+          <button onSubmit={this.submitPurchase} >Submit</button>        
         </div>
         
     );

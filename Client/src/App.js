@@ -1,4 +1,4 @@
-import React, { useEffect, Component } from "react";
+import React, { Component } from "react";
 import OrderForm from "./components/order_form";
 import QueueStatus from "./components/queue_status";
 import ErrorResponse from "./components/error_response";
@@ -18,10 +18,8 @@ class App extends Component {
       error : null
     };
 
-    useEffect(() => {
-      this.handleCall(null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
-      this.handleCall(null, HOST + "/session", "GET", null, this.handleSession, this.notSucessDisplayError);
-    })  
+    this.handleCall(null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
+    this.handleCall(null, HOST + "/session", "GET", null, this.handleSession, this.notSucessDisplayError);
   }
 
 
@@ -86,10 +84,10 @@ class App extends Component {
     return (
       <div className="main__wrap">
         <main className="container">
-          <QueueStatus display={is_waiting} />
+          <QueueStatus display={is_waiting} queue={this.state.queue} />
           <OrderForm session={session} items={items} submitOrder={this.submitOrder} display={is_finish_queue} />
-          <SuccessSubmit display={is_purchased}/>
-          <ErrorResponse display={is_error}/>
+          <SuccessSubmit display={is_purchased} order={this.state.order}/>
+          <ErrorResponse display={is_error} error={this.state.error} />
         </main>
       </div>
     );

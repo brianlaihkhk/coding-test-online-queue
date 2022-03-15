@@ -2,9 +2,13 @@ import React, { Component } from "react";
 
 // Show queue waiting
 class QueueStatus extends Component {
-    
+    constructor(props){
+        super(props);
+        this.queue = props.queue;
+    }
+
     render() {
-        const {waiting_position, waiting_time} = this.state.queue;
+        const {waiting_position, waiting_time} = this.queue;
 
         return (
             <div className="navbar-brand">

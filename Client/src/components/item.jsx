@@ -4,6 +4,7 @@ import React, {Component} from "react";
 
 class Item extends Component {
   constructor(props) {
+    super(props)
     this.key = props.key;
     this.updateItem = props.updateItem;
   }
