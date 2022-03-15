@@ -1,69 +1,94 @@
 import React, { Component } from "react";
-import NavBar from "./components/navbar";
-import Counters from "./components/counters";
+import OrderForm from "./components/order_form";
+import QueueStatus from "./components/queue_status";
+import ErrorResponse from "./components/error_response";
+
+const HOST = 'http://localhost:8080',
 
 class App extends Component {
-  state = {
-    counters: [
-      { id: 1, value: 0 },
-      { id: 2, value: 0 },
-      { id: 3, value: 0 },
-      { id: 4, value: 0 },
-    ],
-  };
 
-  handleIncrement = (counter) => {
-    const counters = [...this.state.counters];
-    const index = counters.indexOf(counter);
-    counters[index] = { ...counters[index] };
-    counters[index].value++;
-    this.setState({ counters });
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      session : {"session" : "", "jwt_token" : ""},
+      items : [],
+      queue : {"in_queue" : False, "waiting_time" : 0, "waiting_position" : 0, "token_valid_until" : 0},
+      order : {"user" : "" , "purchase" : []},
+      error : null
+    };
 
-  handleDecrement = (counter) => {
-    const counters = [...this.state.counters];
-    const index = counters.indexOf(counter);
-    counters[index] = { ...counters[index] };
-    counters[index].value--;
-    this.setState({ counters });
-  };
+    useEffect(() => {
+      this.handleCall(null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
+      this.handleCall(null, HOST + "/session", "GET", null, this.handleSession, this.notSucessDisplayError);
+    })  
+  }
 
-  handleReset = () => {
-    const counters = this.state.counters.map((c) => {
-      c.value = 0;
-      return c;
-    });
-    this.setState({ counters });
-  };
 
-  handleDelete = (counterId) => {
-    const counters = this.state.counters.filter((c) => c.id !== counterId);
-    this.setState({ counters });
-  };
+  handleCall (e, url, method, headers, successHandler, notSuccessHandler) {
+    if (e != null) {
+      e.preventDefault();
+    }
 
-  handleRestart = () => {
-    window.location.reload();
-  };
+    fetch(url, {
+      "method": method,
+      "headers": headers
+    })
+    .then(response => response.json())
+    .then(response => response.success ? successHandler(response.payload) : notSuccessHandler(response.payload))
+    .catch(err => exceptionHandler(err));
+  }
+
+  handleItem (payload) {
+    this.setState({ items : payload });
+  }
+
+  handleQueue (payload) {
+    this.setState({ queue = payload });
+    if (payload["in_queue"]){
+      setTimeout(this.handleCall(null, HOST + "/status", "GET", {"Session" : this.state.session.session}, this.handleQueue, this.notSucessDisplayError), 5000);
+    }
+  }
+
+  handleOrder (payload) {
+    this.setState({ order = payload });
+  }
+
+  submitOrder (e, header) {
+    this.props.handleCall(e, HOST + "/order", "POST", header, this.successSubmit, this.notSucessDisplayError);
+  }
+
+  successSubmit () {
+    this.setState({ order : payload });
+  }
+
+  handleSession (payload) {
+    this.setState({ session = payload });
+    this.handleCall(null, HOST + "/status", "GET", {"Session" : payload.session}, this.handleQueue, this.notSucessDisplayError);
+  }
+
+  exceptionHandler (err) {
+    this.setState({ error = "Internal Server Error" });
+  }
+
+  notSucessDisplayError (payload) {
+    this.setState({ error = payload });
+  }
 
   render() {
+    const {items, session, queue, order, error} = this.state;
+
+    is_waiting = queue.in_queue && error == null;
+    is_finish_queue = !queue.in_queue && error == null;
+    is_purchased = order.purchase.length > 0 && error == null;
+    is_error = error != null;
+
     return (
       <div className="main__wrap">
         <main className="container">
-          <div className="card__box">
-            <NavBar
-              totalCounters={
-                this.state.counters.filter((c) => c.value > 0).length
-              }
-            />
-            <Counters
-              counters={this.state.counters}
-              onReset={this.handleReset}
-              onIncrement={this.handleIncrement}
-              onDecrement={this.handleDecrement}
-              onDelete={this.handleDelete}
-              onRestart={this.handleRestart}
-            />
-          </div>
+          <QueueStatus display={is_waiting} />
+          <OrderForm session={session} items={items} submitOrder={this.submitOrder} display={is_finish_queue} />
+          <SuccessSubmit display={is_purchased}/>
+          <ErrorResponse display={is_error}/>
         </main>
       </div>
     );

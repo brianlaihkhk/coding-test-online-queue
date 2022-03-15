@@ -49,7 +49,7 @@ def is_expired(user_session):
     return False
 
 def get_waiting_time(user_session):
-    return get_waiting_position(user_session) * expiration_minute / concurrent_maximum_users
+    return int(get_waiting_position(user_session) * expiration_minute / concurrent_maximum_users)
 
 def get_waiting_position(user_session):
     if user_session is None :
