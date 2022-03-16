@@ -6,13 +6,13 @@ Coding assessment - Online queuing system - Submitted by Brian Lai
 - Order + queue system (Support local deployment or AWS Lambda deployment for distributed system)
 - Serverless + distributed design (AWS Lambda, AWS Cloudformation (with S3 and ApiGateway))
 - Session based token for queuing
-- ReactJs for client site, queue waiting and send order after finish queuing
+- ReactJs for client side, queue waiting and send order after finish queuing
 
 ### Framework 
 
 - Client : reactJs, Babel / jsx, jwt-simple
 - Order + queue system : SQLAlchemy orm, PyJWT, Flask, pymysql, unittest
-- Deployment : Serverless
+- AWS Deployment : Serverless
 
 ### Folder
 
