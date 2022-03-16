@@ -54,6 +54,8 @@ class LocalServerRouter(BaseHTTPRequestHandler):
             self.send_response(500)
 
         self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Credentials', True)
         self.end_headers()
         self.wfile.write(return_response["body"].encode())
         
@@ -72,6 +74,19 @@ class LocalServerRouter(BaseHTTPRequestHandler):
             self.send_response(500)
 
         self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Credentials', True)
+        self.end_headers()
+        self.wfile.write(return_response["body"].encode())
+
+    def do_OPTIONS(self):
+        return_response = response.success("Success")
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Credentials', True)
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST')
+        self.send_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Session, Authorization')
         self.end_headers()
         self.wfile.write(return_response["body"].encode())
 

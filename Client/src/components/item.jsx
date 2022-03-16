@@ -5,24 +5,21 @@ import React, {Component} from "react";
 class Item extends Component {
   constructor(props) {
     super(props)
-    this.key = props.key;
+    this.uuid = props.uuid;
     this.updateItem = props.updateItem;
   }
 
   updateQuantity = (e) => {
-    var item = {};
-    item['key'] = this.key;
-    item['quantity'] = e.target.value;
-    this.updateItem(item);
+    this.updateItem({ uuid : this.uuid, quantity : e.target.value});
   }
 
   render() {
     return (
-        <div>
-          <span>Item : {this.props.name} </span>
-          <span>Description : {this.props.description} </span>
-          <span>Price : {this.props.price} </span>
-          <span>Enter the quantity to purchase : <input type="text" name="quantity" onChange={this.updateQuantity} /></span>
+        <div style={{ display: 'inline-block', width: '300px', height: '300px', border: '1px solid', margin: '20px 20px', padding: '20px 20px'}}>
+          <p>Item : {this.props.name} </p>
+          <p>Description : {this.props.description} </p>
+          <p>Price : {this.props.price} </p>
+          <p>Enter the quantity to purchase : <input type="text" name="quantity" onChange={this.updateQuantity} /></p>
         </div>
     );
   }

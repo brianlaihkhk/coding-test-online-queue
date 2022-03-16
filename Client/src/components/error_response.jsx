@@ -5,14 +5,15 @@ class ErrorResponse extends Component {
     constructor(props){
         super(props);
         this.error = props.error;
+        this.display = props.display;
     }
     
 
     render() {
         return (
-            <div>
-                <span> Error occured from server : {this.error}. </span>
-                <span>You may re-load the order system to submit your orders.</span>
+            <div style={{display : this.display}}>
+                <p> Error occured from server : {this.error}. </p>
+                <p>You may re-load the order system to submit your orders.</p>
                 <button onClick={() => window.location.reload(false)}>Retry</button>
             </div>
         );

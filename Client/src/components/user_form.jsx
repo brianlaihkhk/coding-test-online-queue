@@ -9,17 +9,20 @@ class UserForm extends Component {
   }  
 
   formChange = (e) => {
-    this.updateUser(e.target.name, e.target.value);
+    console.log(e.target.value);
+    if (e != null && e.target != null && e.target.name != null) {
+      this.updateUser(e.target.name, e.target.value == null ? "" : e.target.value);
+    }
   }
 
   render(){
     return (
-      <div>
-        <span>Contact information</span>
-        <span>First name : <input type="text" name="first_name" onChange={this.formChange} /></span>
-        <span>Last name : <input type="text" name="last_name" onChange={this.formChange} /></span>
-        <span>Email : <input type="text" name="email" onChange={this.formChange} /></span>
-        <span>Mobile : <input type="text" name="mobile" onChange={this.formChange} /></span>
+      <div style={{display: 'block' }}>
+        <p>Contact information</p>
+        <p>First name : <input type="text" name="first_name" onChange={this.formChange} /></p>
+        <p>Last name : <input type="text" name="last_name" onChange={this.formChange} /></p>
+        <p>Email : <input type="text" name="email" onChange={this.formChange} /></p>
+        <p>Mobile : <input type="text" name="mobile" onChange={this.formChange} /></p>
 
       </div>
     )

@@ -56,7 +56,7 @@ def get_waiting_position(user_session):
         return -1
 
     filters = db.and_(Session.IS_IN_QUEUE == True , Session.SESSION_EPOCH_TIME < user_session.SESSION_EPOCH_TIME)
-    count = db.session.query(db.func.count(Session.SESSION_UUID)).filter(filters).count()
+    count = db.session.query(Session.SESSION_UUID).filter(filters).count()
     return count
 
 def update_queue():
@@ -78,7 +78,7 @@ def update_finish_queue_session(user_session) :
 
 def delete_old_session():
     epoch_time = int(time.time())
-    filters = db.and_(Session.IS_IN_QUEUE == False , Session.SESSION_EPOCH_TIME < epoch_time - expiration_minute)
+    filters = db.and_(Session.IS_IN_QUEUE == False , Session.SESSION_EPOCH_TIME < epoch_time - (expiration_minute * 60))
     old_session = db.session.query(Session).filter(filters)
 
     for delete_session in old_session :
