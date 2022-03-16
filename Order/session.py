@@ -55,13 +55,13 @@ def get_waiting_position(user_session):
     if user_session is None :
         return -1
 
-    filters = db.and_(Session.IS_IN_QUEUE == True , Session.SESSION_EPOCH_TIME < user_session.SESSION_EPOCH_TIME)
-    count = db.session.query(db.func.count(Session.SESSION_UUID)).filter(filters).count()
+    filters = db.and_(Session.IS_IN_QUEUE == True , Session.SESSION_EPOCH_TIME <= user_session.SESSION_EPOCH_TIME)
+    count = db.session.query(Session.SESSION_UUID).filter(filters).count()
     return count
 
 def update_queue():
     concurrent_users = Session.query.filter_by(IS_IN_QUEUE = False).count()
-    waiting_users = Session.query.filter_by(IS_IN_QUEUE = True).order_by(Session.SESSION_EPOCH_TIME.asc()).limit(concurrent_maximum_users - concurrent_users).all()
+    waiting_users = Session.query.filter_by(IS_IN_QUEUE = True).order_by(Session.SESSION_EPOCH_TIME.asc()).limit(abs(concurrent_maximum_users - concurrent_users)).all()
 
     for user_session in waiting_users :
         update_finish_queue_session(user_session)
@@ -78,7 +78,7 @@ def update_finish_queue_session(user_session) :
 
 def delete_old_session():
     epoch_time = int(time.time())
-    filters = db.and_(Session.IS_IN_QUEUE == False , Session.SESSION_EPOCH_TIME < epoch_time - expiration_minute)
+    filters = db.and_(Session.IS_IN_QUEUE == False , Session.SESSION_EPOCH_TIME < epoch_time - (expiration_minute * 60))
     old_session = db.session.query(Session).filter(filters)
 
     for delete_session in old_session :
@@ -88,7 +88,7 @@ def delete_old_session():
     return True
 
 def populate_session(event, context):
-    total_populate = 100
+    total_populate = 8
     for count in range(total_populate):
         new(event, context)
     return response.success({"total_populate" : total_populate})

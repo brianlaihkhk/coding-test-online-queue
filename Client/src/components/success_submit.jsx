@@ -3,14 +3,14 @@ import React, { Component }  from "react";
 // Display Success message
 class SuccessSubmit extends Component {
     render() {
-        const {user, purchase} = this.state.order;
+        const {user, purchase} = this.props.order;
 
         return (
-            <div>
-                <span> Thank you for your order. </span>
-                <span>User order id : {user}</span>
-                <span>Total item purchased : {purchase.length}</span>
-                <button onClick="window.location.reload();">Re-order again</button>
+            <div style={{display : this.props.display}}>
+                <p> Thank you for your order. </p>
+                <p>User order id : {user}</p>
+                <p>Total item purchased : {purchase.length}</p>
+                <button onClick={() => window.location.reload(false)}>Re-order again</button>
             </div>
         );
     }

@@ -2,3 +2,4 @@ pymysql==1.0.2
 pyjwt==2.3.0
 flask==2.0.3
 flask_sqlalchemy==2.5.1
+pyyaml==5.4.1

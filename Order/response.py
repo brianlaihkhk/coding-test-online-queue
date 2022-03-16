@@ -11,7 +11,8 @@ def build_response(statusCode, success, payload):
         "statusCode": statusCode,
         "headers": {
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": True
+            "Access-Control-Allow-Credentials": True,
+            "Content-type": "application/json"
         },
         "body": json.dumps(body)
     }

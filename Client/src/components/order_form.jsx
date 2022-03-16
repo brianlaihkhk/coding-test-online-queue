@@ -8,50 +8,106 @@ class OrderForm extends Component {
   constructor(props){
     super(props);
     this.cart = new Map();
-    this.user = {};
-    this.session = props.session;
-    this.submitOrder = props.submitOrder;
+    this.user = new Map();
+  }
+
+  state = {
+    formErrorMessage : ""
   }
 
   updateItem = (item) => {
-    this.cart.set(item.key, item.quantity);
+    if (item != null && item.uuid != null){
+      if (item.quantity > 0) {
+        this.cart.set(item.uuid, item.quantity);
+      } else {
+        this.cart.delete(item.uuid);
+      }
+    }
   }
 
   updateUser = (key, value) => {
-    this.user[key] = value;
+    if (value == null || !value){
+      this.user.delete(key);
+    } else {
+      this.user.set(key, value);
+    }
   }
 
   convertPurchase = (session) => {
-    var jwt = session.jwt_token
     var purchase = []
-    this.cart.map((key, quantity) => this.purchase.append({"item_uuid" : key , "quantity" : quantity}))
+    this.cart.forEach((quantity, key) => purchase.push({"item_uuid" : key , "quantity" : quantity}))
 
-    var jwt_message = jwt.decode({"user" : this.user, "purchase" : purchase}, jwt);
-    return {"Session" : session.session, "Authorization" : jwt_message}
+    var jsonObject = {"user" : Object.fromEntries(this.user), "purchase" : purchase}
+    var jwtMessage = jwt.encode(jsonObject, session.jwt_token);
+    return {"Session" : session.session, "Authorization" : "Bearer " + jwtMessage}
   }
 
+  validateForm () {
+    if (this.cart.size < 1){
+      this.setState({ formErrorMessage : "Please select at least 1 item to purchase"});
+      return false;
+    } else if (this.user.size < 4){
+      this.setState({ formErrorMessage : "Please input all the fields"});
+      return false;
+    } else if (this.user.size < 4){
+      this.setState({ formErrorMessage : "Please input all the fields"});
+      return false;
+    } else if (!this.validateLetterAndSpace(this.user.get("first_name"))){
+      this.setState({formErrorMessage : "First Name format is incorrect"});
+      return false;
+    } else if (!this.validateLetterAndSpace(this.user.get("last_name"))){
+      this.setState({formErrorMessage : "Last Name format is incorrect"});
+      return false;
+    } else if (!this.validateEmail(this.user.get("email"))){
+      this.setState({formErrorMessage : "Email format is incorrect"});
+      return false;
+    } else if (!this.validateNumbers(this.user.get("mobile"))){
+      this.setState({formErrorMessage : "Mobile format is incorrect"});
+      return false;
+    }
+    return true;
+  }
+
+  validateLetterAndSpace = (letter) => {
+    return letter.match(
+      /^[a-zA-Z\s]*$/
+    );
+  };
+
+  validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
+  validateNumbers = (numbers) => {
+    return numbers.match(
+      /^\d+$/
+    );
+  };
+
   submitPurchase = (e) => {
-    var header = this.convertPurchase(this.session);
-    this.submitOrder(e, header);
+    if (this.validateForm()){
+      var header = this.convertPurchase(this.props.session);
+      this.props.submitOrder(e, header);
+    }
   }
 
   render() {
     return (
-        <div>
-          {this.props.items.map((item) => {
-              return <Item key={item.item_uuid}
-                        name={item.item_name} 
-                        description={item.item_description}
-                        price={item.price}
-                        updateItem={this.updateItem} />
-            })                            
+        <div style={{display : this.props.display}}>
+          { this.props.items.map(item => {
+            return <Item key={item.item_uuid}
+                         item={item}
+                         updateItem={this.updateItem} />
+            })
           }
 
           <UserForm 
             updateUser={this.updateUser}>
           </UserForm>
-
-          <button onSubmit={this.submitPurchase} />        
+          <p>{this.state.formErrorMessage}</p>
+          <button onClick={this.submitPurchase} >Submit</button>        
         </div>
         
     );
