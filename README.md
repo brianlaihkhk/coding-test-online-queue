@@ -1,5 +1,5 @@
 # Coding assessment
-Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk@gmail.com)
+Coding assessment - Online queuing system - Submitted by Brian Lai
 
 ### Features
 
@@ -33,7 +33,7 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 - Serverless framework for AWS Lambda deployment
 - For more details please refer to Documentation folder
 
-### Requirement
+### Technical Assessment Requirement
 
 - Client and Backend are required to show queuing system is in function
 - Provide time estimation of the queue, current position for waiting
@@ -52,4 +52,4 @@ Coding assessment - Online queuing system - Submitted by Brian Lai (brianlaihkhk
 
 ### Contact
 - Linkedin : https://www.linkedin.com/in/brianlaihkhk/
-- brianlaihkhk@gmail.com
+- Github : https://github.com/brianlaihkhk/
