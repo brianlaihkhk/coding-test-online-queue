@@ -9,58 +9,104 @@ class OrderForm extends Component {
     super(props);
     this.cart = new Map();
     this.user = new Map();
-    this.session = props.session;
-    this.submitOrder = props.submitOrder;
-    this.display = props.display;
+  }
 
+  state = {
+    formErrorMessage : ""
   }
 
   updateItem = (item) => {
-    if (item != null && item.uuid != null && item.quantity != null){
-      this.cart.set(item.uuid, item.quantity);
+    if (item != null && item.uuid != null){
+      if (item.quantity > 0) {
+        this.cart.set(item.uuid, item.quantity);
+      } else {
+        this.cart.delete(item.uuid);
+      }
     }
   }
 
   updateUser = (key, value) => {
-    if (key != null && value != null){
+    if (value == null || !value){
+      this.user.delete(key);
+    } else {
       this.user.set(key, value);
     }
   }
 
   convertPurchase = (session) => {
-    var jwt_token = session.jwt_token
     var purchase = []
-    Object.keys(this.cart).map((key, quantity) => this.purchase.append({"item_uuid" : key , "quantity" : quantity}))
+    this.cart.forEach((quantity, key) => purchase.push({"item_uuid" : key , "quantity" : quantity}))
 
-    var jwt_message = jwt.decode({"user" : this.user, "purchase" : purchase}, jwt_token);
-    return {"Session" : session.session, "Authorization" : jwt_message}
+    var jsonObject = {"user" : Object.fromEntries(this.user), "purchase" : purchase}
+    var jwtMessage = jwt.encode(jsonObject, session.jwt_token);
+    return {"Session" : session.session, "Authorization" : "Bearer " + jwtMessage}
   }
 
-  submitPurchase = (e) => {
-    console.log(this.session);
+  validateForm () {
+    if (this.cart.size < 1){
+      this.setState({ formErrorMessage : "Please select at least 1 item to purchase"});
+      return false;
+    } else if (this.user.size < 4){
+      this.setState({ formErrorMessage : "Please input all the fields"});
+      return false;
+    } else if (this.user.size < 4){
+      this.setState({ formErrorMessage : "Please input all the fields"});
+      return false;
+    } else if (!this.validateLetterAndSpace(this.user.get("first_name"))){
+      this.setState({formErrorMessage : "First Name format is incorrect"});
+      return false;
+    } else if (!this.validateLetterAndSpace(this.user.get("last_name"))){
+      this.setState({formErrorMessage : "Last Name format is incorrect"});
+      return false;
+    } else if (!this.validateEmail(this.user.get("email"))){
+      this.setState({formErrorMessage : "Email format is incorrect"});
+      return false;
+    } else if (!this.validateNumbers(this.user.get("mobile"))){
+      this.setState({formErrorMessage : "Mobile format is incorrect"});
+      return false;
+    }
+    return true;
+  }
 
-    var header = this.convertPurchase(this.session);
-    this.submitOrder(e, header);
+  validateLetterAndSpace = (letter) => {
+    return letter.match(
+      /^[a-zA-Z\s]*$/
+    );
+  };
+
+  validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
+  validateNumbers = (numbers) => {
+    return numbers.match(
+      /^\d+$/
+    );
+  };
+
+  submitPurchase = (e) => {
+    if (this.validateForm()){
+      var header = this.convertPurchase(this.props.session);
+      this.props.submitOrder(e, header);
+    }
   }
 
   render() {
-
     return (
-        <div style={{display : this.display}}>
-          {this.props.items.map((item) => {
+        <div style={{display : this.props.display}}>
+          { this.props.items.map(item => {
             return <Item key={item.item_uuid}
-                        uuid={item.item_uuid}
-                        name={item.item_name} 
-                        description={item.item_description}
-                        price={item.price}
-                        updateItem={this.updateItem} />
-            })                            
+                         item={item}
+                         updateItem={this.updateItem} />
+            })
           }
 
           <UserForm 
             updateUser={this.updateUser}>
           </UserForm>
-
+          <p>{this.state.formErrorMessage}</p>
           <button onClick={this.submitPurchase} >Submit</button>        
         </div>
         

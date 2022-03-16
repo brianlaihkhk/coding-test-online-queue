@@ -9,16 +9,14 @@ const HOST = 'http://localhost:8081';
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      session : {"session" : "", "jwt_token" : ""},
-      items : [],
-      queue : {"in_queue" : true, "waiting_time" : 0, "waiting_position" : 0, "token_valid_until" : 0},
-      order : {"user" : "" , "purchase" : []},
-      error : null
-    };
-  }
+  state = {
+    session : {"session" : "", "jwt_token" : ""},
+    items : [],
+    queue : {"in_queue" : true, "waiting_time" : 0, "waiting_position" : 0, "token_valid_until" : 0},
+    order : {"user" : "" , "purchase" : []},
+    error : null,
+    milestone : 1
+  };
 
   componentDidMount() {
     this.handleCall (null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
@@ -52,23 +50,20 @@ class App extends Component {
   }
 
   handleQueue = (payload) => {
-    console.log(payload)
     this.setState({ queue : payload });
     if (payload["in_queue"]){
       setTimeout(() => this.handleCall(null, HOST + "/status", "GET", {"Session" : this.state.session.session}, this.handleQueue, this.notSucessDisplayError), 5000);
+    } else {
+      this.setState({ milestone : 2 });
     }
   }
 
-  handleOrder = (payload) => {
-    this.setState({ order : payload });
-  }
-
   submitOrder = (e, header) =>  {
-    this.props.handleCall(e, HOST + "/order", "POST", header, this.successSubmit, this.notSucessDisplayError);
+    this.handleCall(e, HOST + "/order", "POST", header, this.successSubmit, this.notSucessDisplayError);
   }
 
   successSubmit = (payload) => {
-    this.setState({ order : payload });
+    this.setState({ order : payload, milestone : 3 });
   }
 
   handleSession = (payload) => {
@@ -78,21 +73,22 @@ class App extends Component {
 
   exceptionHandler = (err) => {
     console.log("exceptionHandler");
-    this.setState({ error : "Internal Server Error" });
+    this.setState({ error : "Internal Server Error", milestone : 0 });
   }
 
   notSucessDisplayError = (payload) => {
     console.log("notSucessDisplayError");
-    this.setState({ error : payload });
+    console.log(payload);
+    this.setState({ error : payload != null ? payload : "Connection Error", milestone : 0 });
   }
 
   render() {
     const {items, session, queue, order, error} = this.state;
 
-    var is_waiting = queue.in_queue && error == null ? 'block' : 'none';
-    var is_finish_queue =  !queue.in_queue && error == null ? 'block' : 'none';
-    var is_purchased = order.purchase.length > 0 && error == null ? 'block' : 'none';
-    var is_error = error != null ? 'block' : 'none';  
+    var is_waiting = (this.state.milestone === 1) ? 'block' : 'none';
+    var is_finish_queue =  (this.state.milestone === 2) ? 'block' : 'none';
+    var is_purchased = (this.state.milestone === 3) ? 'block' : 'none';
+    var is_error = (this.state.milestone === 0) ? 'block' : 'none';  
 
     return (
       <div className="main__wrap">

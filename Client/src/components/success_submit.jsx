@@ -2,17 +2,11 @@ import React, { Component }  from "react";
 
 // Display Success message
 class SuccessSubmit extends Component {
-    constructor(props){
-        super(props);
-        this.order = props.order;
-        this.display = props.display;
-    }
-
     render() {
-        const {user, purchase} = this.order;
+        const {user, purchase} = this.props.order;
 
         return (
-            <div style={{display : this.display}}>
+            <div style={{display : this.props.display}}>
                 <p> Thank you for your order. </p>
                 <p>User order id : {user}</p>
                 <p>Total item purchased : {purchase.length}</p>
