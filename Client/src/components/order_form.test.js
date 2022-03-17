@@ -1,11 +1,9 @@
 import React from 'react';
 import OrderForm from './order_form';
 import Enzyme, { shallow, render, mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-Enzyme.configure({ adapter: new Adapter() })
-const wrapper = mount(<OrderForm />).instance;
-
-wrapper.state.items = [
+var items = [
     {
       "item_uuid": "item1-uuid",
       "item_name": "Apple Pie",
@@ -32,24 +30,30 @@ wrapper.state.items = [
     }
   ]
 
+
+const baseProps = {items : items};
+
+Enzyme.configure({ adapter: new Adapter() });
+const wrapper = mount(<OrderForm {...baseProps} />).instance();
+
+
 describe("OrderForm initialization and rendering", () => {
     test('OrderForm initialization', () => {
-        expect(wrapper.cart.size).toBe(0);
-        expect(wrapper.cart.user).toBe(0);
-        expect(wrapper.state.formErrorMessage).toBe(false);
+        expect(wrapper.getCart().size).toBe(0);
+        expect(wrapper.getUser().size).toBe(0);
     });
 });
 
 describe("Update tests", () => {
     test('Add items and compare cart', () => {
-        wrapper.updateItem("item1-uuid", 1);
-        wrapper.updateItem("item2-uuid", 1);
-        wrapper.updateItem("item1-uuid", 2);
-        wrapper.updateItem("item3-uuid", 0);
+        wrapper.updateItem({uuid: "item1-uuid", quantity : 1});
+        wrapper.updateItem({uuid: "item2-uuid", quantity : 1});
+        wrapper.updateItem({uuid: "item1-uuid", quantity : 2});
+        wrapper.updateItem({uuid: "item3-uuid", quantity : 0});
 
-        expect(wrapper.cart.size).toBe(2);
-        expect(wrapper.cart.get("item1-uuid")).toBe(2);
-        expect(wrapper.cart.get("item2-uuid")).toBe(1);
+        expect(wrapper.getCart().size).toBe(2);
+        expect(wrapper.getCart().get("item1-uuid")).toBe(2);
+        expect(wrapper.getCart().get("item2-uuid")).toBe(1);
     });
 
     test('Update user infromation and update user', () => {
@@ -58,16 +62,16 @@ describe("Update tests", () => {
         wrapper.updateUser("email", "brianlai@test.com");
         wrapper.updateUser("mobile", "123456789");
 
-        expect(wrapper.user.size).toBe(4);
-        expect(wrapper.cart.get("first-name")).toBe("Lai");
-        expect(wrapper.cart.get("mobile")).toBe("123456789");
+        expect(wrapper.getUser().size).toBe(4);
+        expect(wrapper.getUser().get("first-name")).toBe("Lai");
+        expect(wrapper.getUser().get("mobile")).toBe("123456789");
     });
 
     test('Form validation', () => {
         wrapper.updateUser("first-name", "Lai123");
         expect(wrapper.validateForm()).toBe(false);
 
-        wrapper.updateUser("first-name", "Lai");
+        wrapper.updateUser("last-name", "Lai");
 
         wrapper.updateUser("email", "Lai123");
         expect(wrapper.validateForm()).toBe(false);
@@ -80,7 +84,7 @@ describe("Update tests", () => {
     });
 
     test('Order calculation', () => {
-        expect(wrapper.calculateTotalAmount(wrapper.state.items)).toBe(109);
+        expect(wrapper.calculateTotalAmount(items)).toBe(92);
     });
 
 
