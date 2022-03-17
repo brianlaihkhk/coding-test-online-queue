@@ -4,7 +4,6 @@ import QueueStatus from "./components/queue_status";
 import ErrorResponse from "./components/error_response";
 import SuccessSubmit from "./components/success_submit";
 
-// const HOST = 'https://jfu0bdqbmj.execute-api.ap-southeast-1.amazonaws.com/prd';
 const HOST = 'http://localhost:8081';
 
 class App extends Component {

@@ -11,7 +11,7 @@ class Item extends Component {
   render() {
     const {item_name, item_description, price} = this.props.item;
     return (
-        <div style={{ display: 'inline-block', width: '300px', height: '300px', border: '1px solid', margin: '20px 20px', padding: '20px 20px'}}>
+        <div className="item">
           <p>Item : {item_name} </p>
           <p>Description : {item_description} </p>
           <p>Price : {price} </p>

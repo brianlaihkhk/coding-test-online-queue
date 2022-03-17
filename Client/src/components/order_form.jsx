@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, } from "react";
 import UserForm from "./user_form";
 import Item from "./item";
 var jwt = require('jwt-simple');
@@ -12,7 +12,14 @@ class OrderForm extends Component {
   }
 
   state = {
-    formErrorMessage : ""
+    formErrorMessage : "",
+    orderTotal : 0
+  }
+
+  calculateTotalAmount = (items) => {
+    var total = 0;
+    items.forEach((item) => { total += this.cart.get(item.item_uuid) == null ? 0 : this.cart.get(item.item_uuid) * item.price });
+    return total;
   }
 
   updateItem = (item) => {
@@ -23,6 +30,7 @@ class OrderForm extends Component {
         this.cart.delete(item.uuid);
       }
     }
+    this.setState({ orderTotal : this.calculateTotalAmount(this.props.items)});
   }
 
   updateUser = (key, value) => {
@@ -102,6 +110,7 @@ class OrderForm extends Component {
                          updateItem={this.updateItem} />
             })
           }
+          <p>Total amount : {this.state.orderTotal}</p>
 
           <UserForm 
             updateUser={this.updateUser}>
