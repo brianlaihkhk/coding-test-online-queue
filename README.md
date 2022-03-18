@@ -6,6 +6,7 @@ Coding assessment - Online queuing system - Submitted by Brian Lai
 - Order + queue system
 - Support local / non-AWS deployment or AWS Lambda deployment for distributed system
 - Session based token for queuing
+- JWT for message submission using Authorization header
 - ReactJs for client side, queue waiting and send order after finish queuing
 
 ### Framework 
