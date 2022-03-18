@@ -6,7 +6,7 @@ chmod 777 build/
 cp -rf serverless/ build/
 cp -rf ../Order/ build/
 
-pip3 install -I -t build/ -r ../requirement.txt
+pip3 install -I -t build/ -r ../requirements.txt
 
 cd build/
 npm install serverless@1.73.1

@@ -7,7 +7,7 @@ import traceback
 with open("../Deploy/resources/env-dev.yml", "r") as stream:
     try:
         env = yaml.safe_load(stream)
-        os.environ['RDS_USERNAME'] =  env['RDS_SESSION_USERNAME']
+        os.environ['RDS_USERNAME'] = env['RDS_SESSION_USERNAME']
         os.environ['RDS_PASSWORD'] = env['RDS_SESSION_PASSWORD']
         os.environ['RDS_HOST'] = env['RDS_HOST']
         os.environ['RDS_DEFAULT_DB'] = env['RDS_DEFAULT_DB']
@@ -16,14 +16,12 @@ with open("../Deploy/resources/env-dev.yml", "r") as stream:
     except yaml.YAMLError as exc:
         print(exc)
 
-sys.path.append(os.path.abspath('../Order'))
 import order
 import ping
 import status
 import session
 import item
 import response
-
 
 class LocalServerRouter(BaseHTTPRequestHandler):
     def do_GET(self):
