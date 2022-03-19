@@ -32,14 +32,16 @@ Coding assessment - Online queuing system - Submitted by Brian Lai
 - For more details please refer to Documentation folder
 
 - [AWS solution]
-   - AWS IAM setup with AWS Lambda deployment capability
-   - AWS RDS MySQL (Current setup is using AWS RDS MySQL as illustration)
-   - AWS VPC setup that AWS Lambda is able to connect to public and to AWS RDS MySQL 
-   - Serverless framework for AWS Lambda deployment
+   - AWS IAM (Permission setup)
+   - AWS VPC (Network connection capability)
+   - AWS RDS MySQL (or equivalent)
+   - AWS Lambda
+   - Serverless (for AWS Lambda deployment)
 
 - [non-AWS solution]
    - Docker
-   - MySQL
+   - MySQL (or other SQL database for OLAP)
+   - (Optional) Docker swarm, Kubernetes or equivalent (For container orchestration) 
 
 ### Technical Assessment Requirement
 
