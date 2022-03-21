@@ -1,5 +1,5 @@
-# Coding assessment
-Coding assessment - Online queuing system - Submitted by Brian Lai
+# Coding sample
+Coding sample - Online queuing system - Submitted by Brian Lai
 
 ### Features
 
