@@ -5,12 +5,12 @@ FROM python:3.8-slim-buster
 WORKDIR /
 CMD ["mkdir","Deploy"]
 CMD ["mkdir","Deploy/resources"]
-COPY Deploy/resources/env-dev.yml Deploy/resources/env-dev.yml
+COPY resources/env-dev.yml Deploy/resources/env-dev.yml
 
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
-COPY Order .
+COPY . .
 
 RUN pip3 install -r requirements.txt
 
