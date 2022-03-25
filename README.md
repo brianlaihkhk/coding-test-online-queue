@@ -8,13 +8,20 @@ Coding sample - Online queuing system - Submitted by Brian Lai
 - Session based token for queuing
 - JWT for message submission using Authorization header
 - ReactJs for client side, queue waiting and send order after finish queuing
+- Docker and serverless support for backend service
 
 ### Framework 
 
-- Client : reactJs, react-scripts / jest, jwt-simple
-- Order + queue system : SQLAlchemy orm, PyJWT, Flask, pymysql, unittest
-- Containerization : Docker
-- AWS Deployment : Serverless
+- [Client]
+   - reactJs
+   - react-scripts / jest
+   - jwt-simple
+- [Order + queue system]
+   - SQLAlchemy orm
+   - PyJWT
+   - Flask
+   - pymysql
+   - unittest
 
 ### Folder
 
