@@ -38,11 +38,11 @@ Coding sample - Online queuing system - Submitted by Brian Lai
    - AWS RDS MySQL (or equivalent)
    - AWS Lambda
    - Serverless (for AWS Lambda deployment)
-   - npm, pip
+   - npm, pip3
 
 - [non-AWS solution]
    - MySQL (or other SQL database for OLAP)
-   - npm, pip
+   - npm, pip3
    - Docker
    - (Optional) Docker swarm, Kubernetes or equivalent (For container orchestration) 
 
