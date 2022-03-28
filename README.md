@@ -19,7 +19,6 @@ Coding sample - Online queuing system - Submitted by Brian Lai
 - [Order + queue system]
    - SQLAlchemy orm
    - PyJWT
-   - Flask
    - pymysql
    - unittest
 
